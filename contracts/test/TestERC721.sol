@@ -13,9 +13,9 @@ contract TestERC721 is ERC721Enumerable, Ownable {
         _safeMint(to, tokenId);
     }
 
-    // function tokenURI(uint256 tokenId) public view override returns (string memory) {
-    //     return _tokenURI;
-    // }
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {
+        return _tokenURI;
+    }
 
     function setTokenURI(string memory newTokenURI) external onlyOwner {
         _tokenURI = newTokenURI;

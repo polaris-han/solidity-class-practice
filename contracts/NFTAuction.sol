@@ -4,6 +4,7 @@ pragma solidity ^0.8;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "hardhat/console.sol";
 
 contract NFTAuction is Initializable, UUPSUpgradeable {
 
@@ -46,9 +47,9 @@ contract NFTAuction is Initializable, UUPSUpgradeable {
         require(msg.sender == admin, "Only admin can create auctions");
 
         require(_startingPrice > 0, "Starting price must be positive");
-        require(_duration > 1000 * 10, "Duration must be at least 10 seconds");
+        require(_duration >= 10, "Duration must be at least 10 seconds");
 
-        Auction memory newAuction = Auction({
+        auctions[nextAuctionId] = Auction({
             id: nextAuctionId,
             seller: msg.sender,
             startingPrice: _startingPrice,
@@ -63,10 +64,9 @@ contract NFTAuction is Initializable, UUPSUpgradeable {
             tokenId: _tokenId
         });
 
-        auctions[nextAuctionId] = newAuction;
         nextAuctionId++;
-
-        return newAuction.id;
+        
+        return nextAuctionId - 1;
     }
 
     // 买家参与买单
@@ -97,7 +97,7 @@ contract NFTAuction is Initializable, UUPSUpgradeable {
         // 转移NFT给最高出价者
         IERC721(auction.nftContract).safeTransferFrom(address(this), auction.highestBidder, auction.tokenId);
         // 转移资金给卖家
-        payable(address(this)).transfer(address(this).balance);
+        // payable(address(this)).transfer(address(this).balance);
         // 标记拍卖为结束 
         auction.ended = true;
     }
