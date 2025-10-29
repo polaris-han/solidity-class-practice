@@ -63,9 +63,9 @@ contract NFTAuction is Initializable, UUPSUpgradeable {
             // nft id
             tokenId: _tokenId
         });
-
-        nextAuctionId++;
         
+        nextAuctionId++;
+
         return nextAuctionId - 1;
     }
 
@@ -95,7 +95,7 @@ contract NFTAuction is Initializable, UUPSUpgradeable {
         require(!auction.ended, "Auction already ended");
         require(block.timestamp >= auction.startTime + auction.duration, "Auction is still ongoing");
         // 转移NFT给最高出价者
-        IERC721(auction.nftContract).safeTransferFrom(address(this), auction.highestBidder, auction.tokenId);
+        IERC721(auction.nftContract).safeTransferFrom(admin, auction.highestBidder, auction.tokenId);
         // 转移资金给卖家
         // payable(address(this)).transfer(address(this).balance);
         // 标记拍卖为结束 

@@ -21,15 +21,15 @@ async function main(params) {
 
     // 铸造NFT
     const [signer, buyer] = await ethers.getSigners();
-    for (let i = 1; i < 10; i++) {
-        await testERC721.mint(signer.address, i + 1 );
+    for (let i = 1; i <= 10; i++) {
+        await testERC721.mint(signer.address, i);
     }
 
     const tokenId = 1;
 
     // 授权NFT拍卖合约
     await testERC721.connect(signer).setApprovalForAll(nftAuctionProxy.address, true);
-    
+
     // 创建拍卖
     const nftAuction = await ethers.getContractAt("NFTAuction", nftAuctionProxy.address);
     await nftAuction.createAuction(
